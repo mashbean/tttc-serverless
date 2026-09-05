@@ -7,7 +7,7 @@ export default defineConfig({
   },
   plugins: [
     cloudflareTest({
-      wrangler: { configPath: "./wrangler.jsonc" },
+      wrangler: { configPath: "./wrangler.test.jsonc" },
       // 測試不呼叫真正的 Workers AI：AI_MODE=fake 讓管線回傳可預期的假結果。
       miniflare: { bindings: { AI_MODE: "fake", MAX_ROWS: "50", DAILY_NEURON_CEILING: "9000" } },
     }),

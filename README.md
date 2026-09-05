@@ -62,7 +62,7 @@ npm run deploy             # 預設環境（workers.dev）
 npm run deploy:production  # 只有這個環境綁 ttt-city.mashbean.net；Worker 名稱不可改
 ```
 
-`AI_MODE=fake` 時模型呼叫回傳可預期的假結果，讓整條管線（含 DO alarm 與帳本）可以在測試裡跑完。
+`AI_MODE=fake` 時模型呼叫回傳可預期的假結果，讓整條管線（含 DO alarm 與帳本）可以在測試裡跑完。測試讀的是 `wrangler.test.jsonc`（與 `wrangler.jsonc` 相同但沒有 AI 綁定，因為 vitest 會為 AI 綁定開遠端代理，CI 沒有 token）；改綁定時兩份要一起改。
 
 ## 部署
 
