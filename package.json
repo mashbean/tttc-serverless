@@ -1,0 +1,47 @@
+{
+  "name": "@mashbean/tttc-serverless",
+  "version": "0.1.0",
+  "description": "Pocket TTTC (口袋議題樹): Talk to the City-style claim extraction and topic trees on a single Cloudflare Worker with Durable Objects and Workers AI — no server, no database, one-click deploy",
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mashbean/tttc-serverless.git"
+  },
+  "bugs": "https://github.com/mashbean/tttc-serverless/issues",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "deploy:dry": "wrangler deploy --dry-run",
+    "typecheck": "tsc --noEmit",
+    "types": "wrangler types",
+    "test": "vitest run",
+    "smoke": "node scripts/smoke.mjs",
+    "check": "npm run typecheck && npm test && npm run deploy:dry"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "^0.21.3",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.10",
+    "wrangler": "^4.123.0"
+  },
+  "engines": {
+    "node": ">=22.13"
+  },
+  "cloudflare": {
+    "bindings": {
+      "ASSETS": {
+        "description": "Static create and report pages."
+      },
+      "REPORT": {
+        "description": "One SQLite Durable Object per report: input rows, pipeline state, claims and the finished topic tree."
+      },
+      "COORDINATOR": {
+        "description": "Durable Object holding the deployment-wide daily Workers AI neuron ledger and the report-creation rate limit."
+      },
+      "AI": {
+        "description": "Workers AI binding (Gemma 4) used for clustering, claim extraction, grouping and summaries."
+      }
+    }
+  }
+}

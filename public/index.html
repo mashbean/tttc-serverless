@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pocket TTTC 口袋議題樹</title>
+  <meta name="description" content="把一份 id,interview,comment 的 CSV 變成主張與議題樹。單一 Cloudflare Worker、Durable Objects 與 Workers AI，沒有伺服器。" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+<main>
+  <header class="site">
+    <a href="/">Pocket TTTC · 口袋議題樹</a>
+    <a href="https://github.com/mashbean/tttc-serverless" rel="noopener">原始碼</a>
+  </header>
+  <p class="kicker">Talk to the City 的輕量重寫</p>
+  <h1>把一堆發言，整理成可以投票的主張與議題樹</h1>
+  <p class="lede">放入 <code>id,interview,comment</code> 三欄的 CSV。系統先提出主題與子主題，再從每則發言抽出可辯論的主張、把相近的主張合併、為每個主題寫摘要。結果是一棵可以展開到原句引述的樹。</p>
+
+  <form id="create-form" class="card">
+    <label for="title">分析名稱</label>
+    <input id="title" type="text" maxlength="120" required placeholder="例如：核電重啟五十人審議的所有發言" />
+    <label for="description">背景說明（選填）</label>
+    <textarea id="description" maxlength="2000" rows="3" placeholder="這批發言從哪裡來、你想理解什麼。會放進提示詞，幫模型抓對脈絡。"></textarea>
+    <label for="language">輸出語言</label>
+    <select id="language">
+      <option value="zh-Hant" selected>正體中文（台灣）</option>
+      <option value="en">English</option>
+    </select>
+    <label for="file">CSV 檔案</label>
+    <input id="file" type="file" accept=".csv,text/csv" />
+    <p class="hint">或直接貼上：</p>
+    <textarea id="csv" placeholder="id,interview,comment&#10;1,阿德,我家離核二廠不到五公里…"></textarea>
+    <p class="hint" id="limits">每份最多 <span id="max-rows">600</span> 則發言（免費額度）；每則最長 2,000 字。interview 欄可留空，用來標記發言者或來源。</p>
+    <label class="consent"><input id="confirmed" type="checkbox" /> <span>這份 CSV 沒有姓名、聯絡方式等直接識別資料，我有權利把它交給模型分析，並且會在公開報告前人工檢查。</span></label>
+    <button id="submit" class="button" type="submit">建立報告</button>
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+  </form>
+
+  <section id="result" class="card hidden" aria-live="polite">
+    <h2>報告已排入處理</h2>
+    <p>模型會分幾步處理，通常幾分鐘內完成；發言多或當日額度用完時會自動排到隔天續跑。這一頁可以關掉，用下面的連結回來看。</p>
+    <p class="links"><strong>公開報告：</strong><a id="report-link" href="#"></a></p>
+    <p class="links"><strong>管理連結（可刪除、重試）：</strong><a id="manage-link" href="#"></a></p>
+    <p class="private">管理連結只會顯示這一次，伺服器只存它的雜湊值；請自己保存。</p>
+  </section>
+
+  <h2>它怎麼運作</h2>
+  <p>四個步驟，順序與 Talk to the City 相同：<strong>分群</strong>（提出主題與子主題）→ <strong>抽取</strong>（每 8 則發言一批，抽出可辯論、原子性的主張與引述）→ <strong>合併</strong>（同一子主題內相近的主張歸成一句）→ <strong>摘要</strong>（每個主題 100–140 字）。模型是 Cloudflare Workers AI 的 Gemma 4；每次呼叫前先在每日神經元帳本預留，額度不夠就等隔天，不會偷偷降級。</p>
+  <p>報告與輸入都存在一個 Durable Object 裡，只有知道網址的人能看；管理連結可以整份刪除。</p>
+
+  <footer>
+    管線設計與提示詞結構來自 <a href="https://github.com/AIObjectives/tttc-light-js" rel="noopener">Talk to the City</a>（AI Objectives Institute，Apache-2.0）；本專案為 Cloudflare Workers 的獨立重寫，MIT 授權。
+  </footer>
+</main>
+<script type="module" src="/app.js"></script>
+</body>
+</html>

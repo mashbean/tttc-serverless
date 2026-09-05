@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <title>報告 · Pocket TTTC</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+<main>
+  <header class="site">
+    <a href="/">Pocket TTTC · 口袋議題樹</a>
+    <span id="model" class="hint"></span>
+  </header>
+  <p class="kicker" id="kicker">報告</p>
+  <h1 id="title">載入中…</h1>
+  <p class="lede" id="description"></p>
+
+  <section id="pending" class="card hidden">
+    <h2 id="pending-title">正在處理</h2>
+    <div class="progress"><i id="progress-bar" style="width:0%"></i></div>
+    <p id="pending-text" class="status"></p>
+    <p id="pending-error" class="error hidden"></p>
+    <div id="admin-actions" class="toolbar hidden">
+      <button id="retry" class="button ghost" type="button">重新排程</button>
+    </div>
+  </section>
+
+  <section id="ready" class="hidden">
+    <div class="stats" id="stats"></div>
+    <div class="toolbar">
+      <input id="filter" type="search" placeholder="搜尋主張、引述或發言者" />
+      <a id="download-json" class="button ghost" href="#">下載 JSON</a>
+      <a id="download-csv" class="button ghost" href="#">下載 claims.csv</a>
+    </div>
+    <nav id="toc" class="hint"></nav>
+    <div id="tree"></div>
+  </section>
+
+  <section id="admin" class="card hidden">
+    <h2>管理</h2>
+    <p class="hint">這個網址的 <code>#admin=</code> 片段就是管理權杖，不會送到伺服器；只有你看得到這一區。</p>
+    <div class="toolbar">
+      <button id="delete" class="button ghost" type="button">刪除整份報告</button>
+    </div>
+    <p id="admin-status" class="status"></p>
+  </section>
+
+  <p id="error" class="error hidden"></p>
+
+  <footer>
+    引述來自參與者的原始發言，主張與摘要由模型產生，可能有誤；公開前請人工檢查。管線設計來自 <a href="https://github.com/AIObjectives/tttc-light-js" rel="noopener">Talk to the City</a>。
+  </footer>
+</main>
+<script type="module" src="/report.js"></script>
+</body>
+</html>
