@@ -18,8 +18,7 @@
     ]
   },
   "ai": {
-    "binding": "AI",
-    "remote": true
+    "binding": "AI"
   },
   "migrations": [
     {
@@ -48,7 +47,7 @@
           { "name": "COORDINATOR", "class_name": "Coordinator" }
         ]
       },
-      "ai": { "binding": "AI", "remote": true },
+      "ai": { "binding": "AI" },
       "vars": { "AI_MODE": "live", "MAX_ROWS": "600", "DAILY_NEURON_CEILING": "9000", "BUILD_SHA": "" },
       "routes": [{ "pattern": "ttt-city.mashbean.net", "custom_domain": true }]
     }
