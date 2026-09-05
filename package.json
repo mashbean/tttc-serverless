@@ -17,7 +17,9 @@
     "types": "wrangler types",
     "test": "vitest run",
     "smoke": "node scripts/smoke.mjs",
-    "check": "npm run typecheck && npm test && npm run deploy:dry"
+    "check": "npm run typecheck && npm test && npm run deploy:dry && npm run deploy:dry:production",
+    "deploy:production": "wrangler deploy --env production",
+    "deploy:dry:production": "wrangler deploy --dry-run --env production"
   },
   "devDependencies": {
     "@cloudflare/vitest-pool-workers": "^0.21.3",

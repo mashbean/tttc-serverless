@@ -1,5 +1,6 @@
 // 唯讀煙霧測試：不建立報告、不呼叫模型。用法：node scripts/smoke.mjs https://your-worker.example
 const base = (process.argv[2] || "http://127.0.0.1:8787").replace(/\/$/, "");
+const expectSha = process.argv.includes("--expect-sha") ? process.argv[process.argv.indexOf("--expect-sha") + 1] : "";
 const checks = [];
 const check = (name, ok, detail = "") => checks.push({ name, ok, detail });
 
@@ -7,6 +8,7 @@ const health = await fetch(`${base}/api/health`);
 const healthBody = await health.json().catch(() => null);
 check("GET /api/health", health.status === 200 && healthBody?.ok === true, `status ${health.status}`);
 check("health reports the row cap and remaining neurons", Number.isFinite(healthBody?.maxRows) && Number.isFinite(healthBody?.dailyNeuronsRemaining));
+if (expectSha) check("health reports the expected build", healthBody?.sha === expectSha, `sha ${healthBody?.sha} !== ${expectSha}`);
 
 const home = await fetch(`${base}/`);
 check("GET / serves the create page", home.status === 200 && (await home.text()).includes("口袋議題樹"));

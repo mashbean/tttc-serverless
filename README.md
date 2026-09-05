@@ -2,7 +2,7 @@
 
 [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/mashbean/tttc-serverless)
 
-[Talk to the City](https://github.com/AIObjectives/tttc-light-js) 的輕量重寫：把一份 `id,interview,comment` 的 CSV 變成「主題 → 子主題 → 可辯論的主張 → 原句引述」的議題樹。整個系統是**一個 Cloudflare Worker**：Durable Object SQLite 存資料、DO alarm 跑管線、Workers AI（Gemma 4）做模型推論。沒有伺服器、沒有資料庫、沒有金鑰要設，按上面的按鈕就能部署，免費額度內可用。
+[Talk to the City](https://github.com/AIObjectives/tttc-light-js) 的輕量重寫：把一份 `id,interview,comment` 的 CSV 變成「主題 → 子主題 → 可辯論的主張 → 原句引述」的議題樹。整個系統是**一個 Cloudflare Worker**：Durable Object SQLite 存資料、DO alarm 跑管線、Workers AI（Gemma 4）做模型推論。沒有伺服器、沒有資料庫、沒有金鑰要設，按上面的按鈕就能部署，免費額度內可用。正式站：https://ttt-city.mashbean.net
 
 ## 它做什麼
 
@@ -58,10 +58,16 @@ npm install
 npm run dev        # wrangler dev
 npm test           # vitest（@cloudflare/vitest-pool-workers；AI_MODE=fake，不呼叫真正的模型）
 npm run check      # typecheck + test + deploy --dry-run
-npm run deploy
+npm run deploy             # 預設環境（workers.dev）
+npm run deploy:production  # 只有這個環境綁 ttt-city.mashbean.net；Worker 名稱不可改
 ```
 
 `AI_MODE=fake` 時模型呼叫回傳可預期的假結果，讓整條管線（含 DO alarm 與帳本）可以在測試裡跑完。
+
+## 部署
+
+- 按鈕：README 頂端的 Deploy to Cloudflare，部署到你自己的 workers.dev。
+- 正式站 CI：push 到 `main` 會跑 `.github/workflows/deploy.yml`（check → deploy `--env production` → smoke）。需要 repository secrets `CLOUDFLARE_API_TOKEN`（權限：Account → Workers Scripts:Edit；Zone → Workers Routes:Edit）與 `CLOUDFLARE_ACCOUNT_ID`；缺少時 deploy 步驟會略過並留下提示。
 
 ## 致謝與授權
 

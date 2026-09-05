@@ -33,7 +33,25 @@
     // 免費方案的安全上限：每份報告最多幾則發言。付費帳號可調高，同時調整 DAILY_NEURON_CEILING。
     "MAX_ROWS": "600",
     // 全部署每日（UTC）神經元上限；免費額度 10,000，留 1,000 餘裕。
-    "DAILY_NEURON_CEILING": "9000"
+    "DAILY_NEURON_CEILING": "9000",
+    // CI 部署時以 --var BUILD_SHA:<sha> 覆寫，/api/health 會回報
+    "BUILD_SHA": ""
+  },
+  // 正式網域只放在 env.production：Deploy Button 的複製者跑預設環境，不會搶走 ttt-city.mashbean.net。
+  // production 必須維持相同 Worker 名稱，才會沿用同一個 Durable Object namespace。
+  "env": {
+    "production": {
+      "name": "tttc-serverless",
+      "durable_objects": {
+        "bindings": [
+          { "name": "REPORT", "class_name": "ReportRoom" },
+          { "name": "COORDINATOR", "class_name": "Coordinator" }
+        ]
+      },
+      "ai": { "binding": "AI", "remote": true },
+      "vars": { "AI_MODE": "live", "MAX_ROWS": "600", "DAILY_NEURON_CEILING": "9000", "BUILD_SHA": "" },
+      "routes": [{ "pattern": "ttt-city.mashbean.net", "custom_domain": true }]
+    }
   },
   "observability": {
     "enabled": true,

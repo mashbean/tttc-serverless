@@ -39,7 +39,7 @@ async function health(request: Request, env: Env): Promise<Response> {
   if (request.method !== "GET" && request.method !== "HEAD") return jsonError("method not allowed", 405);
   const coordinator = env.COORDINATOR.get(env.COORDINATOR.idFromName(COORDINATOR_INSTANCE));
   const remaining = await coordinator.dailyRemaining();
-  return json({ ok: true, aiMode: isFakeAi(env) ? "fake" : "live", maxRows: maxRows(env), dailyNeuronsRemaining: Math.floor(remaining) }, 200);
+  return json({ ok: true, aiMode: isFakeAi(env) ? "fake" : "live", maxRows: maxRows(env), dailyNeuronsRemaining: Math.floor(remaining), sha: typeof env.BUILD_SHA === "string" ? env.BUILD_SHA : "" }, 200);
 }
 
 async function createReport(request: Request, env: Env, url: URL): Promise<Response> {
