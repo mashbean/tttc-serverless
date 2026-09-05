@@ -87,7 +87,7 @@ describe("Pocket TTTC worker", () => {
     expect(lines[0]).toBe("topic,subtopic,claim,people,quote,interview,comment_id");
     expect(lines).toHaveLength(7);
 
-    const page = await SELF.fetch(created.body.urls.report);
+    const page = await SELF.fetch(created.body.urls.report, { redirect: "manual" });
     expect(page.status).toBe(200);
     expect(await page.text()).toContain("Pocket TTTC");
   });
