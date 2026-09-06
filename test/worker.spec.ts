@@ -90,6 +90,9 @@ describe("Pocket TTTC worker", () => {
     const page = await SELF.fetch(created.body.urls.report, { redirect: "manual" });
     expect(page.status).toBe(200);
     expect(await page.text()).toContain("Pocket TTTC");
+    const canvas = await SELF.fetch(`${created.body.urls.report}/canvas`, { redirect: "manual" });
+    expect(canvas.status).toBe(200);
+    expect(await canvas.text()).toContain("議題畫布");
   });
 
   it("only the admin token can retry or delete, and deleted reports answer 410", async () => {

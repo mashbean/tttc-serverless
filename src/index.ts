@@ -19,9 +19,10 @@ export default {
       const reportMatch = url.pathname.match(/^\/api\/reports\/([a-z0-9]{10})(?:\/(report\.json|claims\.csv|retry))?$/);
       if (reportMatch) return reportApi(request, env, reportMatch[1] as string, reportMatch[2]);
       if (url.pathname.startsWith("/api/")) return jsonError("not found", 404);
-      if (/^\/r\/[a-z0-9]{10}\/?$/.test(url.pathname)) {
-        // Workers Assets 預設把 /report.html 轉址成 /report；直接要 /report，並把殘餘的轉址在 Worker 內跟完，網址才會留在 /r/<id>。
-        let page = await env.ASSETS.fetch(new Request(new URL("/report", url.origin), { method: "GET", headers: request.headers }));
+      const pageMatch = url.pathname.match(/^\/r\/[a-z0-9]{10}(\/canvas)?\/?$/);
+      if (pageMatch) {
+        // Workers Assets 預設把 /report.html 轉址成 /report；直接要 /report（或 /canvas），並把殘餘的轉址在 Worker 內跟完，網址才會留在 /r/<id>。
+        let page = await env.ASSETS.fetch(new Request(new URL(pageMatch[1] ? "/canvas" : "/report", url.origin), { method: "GET", headers: request.headers }));
         for (let hop = 0; hop < 2 && page.status >= 300 && page.status < 400 && page.headers.get("location"); hop += 1) {
           page = await env.ASSETS.fetch(new Request(new URL(page.headers.get("location") as string, url.origin), { method: "GET", headers: request.headers }));
         }

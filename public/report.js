@@ -45,6 +45,7 @@ function render(report) {
     tree = report.tree;
     renderTree(tree);
     el("download-json").href = `/api/reports/${reportId}/report.json`;
+    el("canvas-link").href = `/r/${reportId}/canvas`;
     el("download-csv").href = `/api/reports/${reportId}/claims.csv`;
     return;
   }

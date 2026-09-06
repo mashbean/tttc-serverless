@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <title>畫布 · Pocket TTTC</title>
+  <link rel="stylesheet" href="/style.css" />
+  <style>
+    main.canvas { max-width: none; padding: 1rem 1.25rem 2rem; }
+    .canvas-wrap { display: grid; grid-template-columns: 1fr 22rem; gap: 1rem; height: calc(100vh - 9rem); min-height: 32rem; }
+    @media (max-width: 60rem) { .canvas-wrap { grid-template-columns: 1fr; height: auto; } .panel { max-height: 20rem; } }
+    .stage { border: 1px solid var(--line); border-radius: 8px; background: var(--card); overflow: hidden; position: relative; }
+    .stage svg { width: 100%; height: 100%; display: block; cursor: grab; touch-action: none; }
+    .stage svg.dragging { cursor: grabbing; }
+    .panel { border: 1px solid var(--line); border-radius: 8px; background: var(--card); padding: .9rem 1rem; overflow: auto; }
+    .panel h3 { margin: 0 0 .3rem; }
+    .panel .quote { border-left: 3px solid var(--line); padding: .2rem .6rem; margin: .4rem 0; font-size: .92rem; }
+    .panel .quote .who { color: var(--muted); font-size: .8rem; }
+    .legend { display: flex; flex-wrap: wrap; gap: .4rem .9rem; font-size: .85rem; margin: .4rem 0; }
+    .legend span::before { content: ""; display: inline-block; width: .7rem; height: .7rem; border-radius: 50%; background: var(--c); margin-right: .3rem; vertical-align: -1px; }
+    .hud { position: absolute; left: .6rem; bottom: .6rem; font-size: .78rem; color: var(--muted); background: var(--card); padding: .2rem .5rem; border-radius: 4px; border: 1px solid var(--line); }
+    text.topic { font-weight: 700; font-size: 15px; fill: var(--ink); }
+    text.sub { font-size: 11px; fill: var(--muted); }
+    circle.claim { stroke: var(--card); stroke-width: 1.5; cursor: pointer; }
+    circle.claim.dim { opacity: .18; }
+    circle.claim.active { stroke: var(--ink); stroke-width: 3; }
+    line.spoke { stroke: var(--line); stroke-width: 1; }
+    path.sector { opacity: .08; }
+  </style>
+</head>
+<body>
+<main class="canvas">
+  <header class="site"><a href="/">Pocket TTTC · 口袋議題樹</a><a id="report-link" href="#">回報告</a></header>
+  <h1 id="title" style="font-size:1.3rem;margin:.2rem 0">載入中…</h1>
+  <div class="toolbar" style="margin:.4rem 0"><input id="filter" type="search" placeholder="搜尋主張、引述或發言者，符合的節點會亮起" style="max-width:24rem" /><span id="stats" class="hint"></span></div>
+  <div class="legend" id="legend"></div>
+  <div class="canvas-wrap">
+    <div class="stage"><svg id="svg" viewBox="0 0 1400 1400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="議題畫布"></svg><div class="hud">滾輪縮放 · 拖曳平移 · 拖節點可移動 · 點節點看引述</div></div>
+    <aside class="panel" id="panel"><p class="hint">節點大小＝支持這句主張的人數；同一子主題的節點排在同一條輻條附近。點一個節點看原句引述。</p></aside>
+  </div>
+  <p id="error" class="error hidden"></p>
+</main>
+<script type="module" src="/canvas.js"></script>
+</body>
+</html>
